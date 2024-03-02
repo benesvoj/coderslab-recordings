@@ -2,10 +2,8 @@ import {mockData as data} from './utils/mockData'
 import {Card, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card.tsx";
 import {buttonVariants} from "@/components/ui/button"
 import {Link} from "react-router-dom";
-import {useState} from "react";
 
 export const App = () => {
-	const [recordings, setRecordings] = useState([])
 
 	return (
 		<div className='p-24'>
