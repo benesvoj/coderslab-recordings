@@ -8,44 +8,44 @@ import {
 import {Button} from "@/components/ui/button.tsx";
 import {Input} from "@/components/ui/input.tsx";
 import {Textarea} from "@/components/ui/textarea.tsx";
-import {Recording} from "@/App.tsx";
 import {supabase} from "@/utils/supabase.ts";
 import {Form, FormControl, FormField, FormItem, FormLabel} from "@/components/ui/form.tsx";
 import {z} from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
+import {Recording} from "@/lib/types.ts";
 
-export const EditRecordingDialog = (props: {
+export const EditRecordingDialog = ({recording, isOpen, onOpenChange}: {
 	recording: Recording,
 	isOpen: boolean,
 	onOpenChange: (isOpen: boolean) => void
 }) => {
-
-	const {recording, isOpen, onOpenChange} = props
 
 	const form = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
 		defaultValues: {
 			title: recording.title,
 			description: recording.description,
-			url: recording.url
+			url: recording.url,
+			date: recording.date
 		}
 	})
 
-	const onSubmit = async (values: z.infer<typeof  schema>) => {
+	const onSubmit = async (values: z.infer<typeof schema>) => {
 		const {error} = await supabase
 			.from('recordings')
 			.update({title: values.title, url: values.url, description: values.description})
 			.eq('id', recording.id)
 
 		if (error) throw error;
+		onOpenChange(false)
 	}
 
 	return (
 		<Dialog open={isOpen} onOpenChange={onOpenChange}>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Would you like to edit {recording.title}?</DialogTitle>
+					<DialogTitle>Would you like to edit {recording.title} session?</DialogTitle>
 					<DialogDescription>
 						Following fields are editable.
 					</DialogDescription>
@@ -83,7 +83,19 @@ export const EditRecordingDialog = (props: {
 								<FormItem>
 									<FormLabel>Description</FormLabel>
 									<FormControl>
-										<Textarea {...field} rows={6} />
+										<Textarea {...field} rows={6}/>
+									</FormControl>
+								</FormItem>
+							)}
+						/>
+						<FormField
+							name='date'
+							control={form.control}
+							render={({field}) => (
+								<FormItem>
+									<FormLabel>Date</FormLabel>
+									<FormControl>
+										<Input {...field} type='date'/>
 									</FormControl>
 								</FormItem>
 							)}
@@ -104,5 +116,6 @@ export const EditRecordingDialog = (props: {
 const schema = z.object({
 	title: z.string(),
 	description: z.string(),
-	url: z.string()
+	url: z.string(),
+	date: z.string()
 })

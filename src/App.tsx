@@ -6,14 +6,7 @@ import {EditRecordingDialog} from "@/components/EditRecordingDialog.tsx";
 import {AddRecordingDialog} from "@/components/AddRecordingDialog.tsx";
 import {Input} from "@/components/ui/input.tsx";
 import {LoginDialog} from "@/components/LoginDialog.tsx";
-
-export interface Recording {
-	id: string
-	title: string
-	description: string
-	url: string
-	date: string
-}
+import {Recording} from "@/lib/types.ts";
 
 export const App = () => {
 
@@ -22,6 +15,7 @@ export const App = () => {
 	const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false)
 	const [isLoginDialogOpen, setIsLoginDialogOpen] = useState<boolean>(false)
 	const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false)
+	const [editRecording, setEditRecording] = useState<Recording | null>(null)
 
 	useEffect(() => {
 		const loadData = async () => {
@@ -39,13 +33,19 @@ export const App = () => {
 		return item.title.toLowerCase().includes(searching.toLowerCase())
 	})
 
+	const handleEditRecord = (item: Recording) => {
+		setEditRecording(item)
+		setIsEditDialogOpen(!isEditDialogOpen)
+	}
+
 	return (
 		<>
 			<div className='p-24'>
 				<div className='w-full flex justify-between p-2'>
 					<h1 className='text-2xl font-semibold my-4'>CodersLab recordings</h1>
 					<div className='flex gap-4 items-center'>
-						<Input type='search' placeholder='Searching ...' value={searching} onChange={(e) => setSearching(e.target.value)}/>
+						<Input type='search' placeholder='Searching ...' value={searching}
+							   onChange={(e) => setSearching(e.target.value)}/>
 						<Button onClick={() => setIsAddDialogOpen(!isAddDialogOpen)}>Add new</Button>
 						<Button onClick={() => setIsLoginDialogOpen(!isLoginDialogOpen)}>Login</Button>
 					</div>
@@ -63,20 +63,26 @@ export const App = () => {
 									</CardDescription>
 								</CardHeader>
 								<CardFooter className='flex justify-end gap-4'>
-									<Button variant='secondary' onClick={() => setIsEditDialogOpen(!isEditDialogOpen)}>Edit</Button>
+									<Button variant='secondary' onClick={() => handleEditRecord(item)}>Edit</Button>
 									{item.url
-										? (<a className={buttonVariants({variant: "default"})} href={item.url} target='_blank'>Show me</a>)
+										? (<a className={buttonVariants({variant: "default"})} href={item.url}
+											  target='_blank'>Show me</a>)
 										: null
 									}
 								</CardFooter>
-								<EditRecordingDialog recording={item} isOpen={isEditDialogOpen}
-													 onOpenChange={() => setIsEditDialogOpen(!isEditDialogOpen)}/>
 							</Card>
-					))}
+						)
+					)}
 				</div>
 			</div>
-			<LoginDialog isOpen={isLoginDialogOpen} onOpenChange={setIsLoginDialogOpen} />
-			<AddRecordingDialog isOpen={isAddDialogOpen} onOpenChange={setIsAddDialogOpen} />
+			{isLoginDialogOpen &&
+                <LoginDialog isOpen={isLoginDialogOpen} onOpenChange={setIsLoginDialogOpen}/>
+			}
+			{isAddDialogOpen &&
+                <AddRecordingDialog isOpen={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}/>
+			}
+			{isEditDialogOpen && editRecording && <EditRecordingDialog recording={editRecording} isOpen={isEditDialogOpen}
+                                                      onOpenChange={() => setIsEditDialogOpen(!isEditDialogOpen)}/>}
 		</>
 	)
 }
