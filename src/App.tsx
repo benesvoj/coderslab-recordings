@@ -35,27 +35,9 @@ export const App = () => {
 		loadData()
 	}, [])
 
-
 	const filteredRecordings = recordings.filter((item) => {
 		return item.title.toLowerCase().includes(searching.toLowerCase())
 	})
-
-	const handleEditDialog = () => {
-		console.log('clicked edit')
-		setIsEditDialogOpen(!isEditDialogOpen)
-	}
-	const onOpenChange = () => {
-		setIsEditDialogOpen(!isEditDialogOpen)
-	}
-
-	const handleLoginDialog = () => {
-		setIsLoginDialogOpen(!isLoginDialogOpen)
-	}
-
-	const handleAddDialog = () => {
-		setIsAddDialogOpen(!isAddDialogOpen)
-	}
-
 
 	return (
 		<>
@@ -63,9 +45,9 @@ export const App = () => {
 				<div className='w-full flex justify-between p-2'>
 					<h1 className='text-2xl font-semibold my-4'>CodersLab recordings</h1>
 					<div className='flex gap-4 items-center'>
-						<Input type='search' value={searching} onChange={(e) => setSearching(e.target.value)}/>
-						<Button onClick={handleAddDialog}>Add new</Button>
-						<Button onClick={handleLoginDialog}>Login</Button>
+						<Input type='search' placeholder='Searching ...' value={searching} onChange={(e) => setSearching(e.target.value)}/>
+						<Button onClick={() => setIsAddDialogOpen(!isAddDialogOpen)}>Add new</Button>
+						<Button onClick={() => setIsLoginDialogOpen(!isLoginDialogOpen)}>Login</Button>
 					</div>
 				</div>
 				<div className='w-full grid grid-cols-2'>
@@ -81,13 +63,14 @@ export const App = () => {
 									</CardDescription>
 								</CardHeader>
 								<CardFooter className='flex justify-end gap-4'>
-									<Button variant='secondary' onClick={handleEditDialog}>Edit</Button>
-									<a
-										className={buttonVariants({variant: "default"})}
-										href={item.url} target='_blank'>Show me</a>
+									<Button variant='secondary' onClick={() => setIsEditDialogOpen(!isEditDialogOpen)}>Edit</Button>
+									{item.url
+										? (<a className={buttonVariants({variant: "default"})} href={item.url} target='_blank'>Show me</a>)
+										: null
+									}
 								</CardFooter>
 								<EditRecordingDialog recording={item} isOpen={isEditDialogOpen}
-													 onOpenChange={onOpenChange}/>
+													 onOpenChange={() => setIsEditDialogOpen(!isEditDialogOpen)}/>
 							</Card>
 					))}
 				</div>
