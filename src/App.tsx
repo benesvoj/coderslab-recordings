@@ -7,8 +7,9 @@ import {AddRecordingDialog} from "@/components/AddRecordingDialog.tsx";
 import {Input} from "@/components/ui/input.tsx";
 import {LoginDialog} from "@/components/LoginDialog.tsx";
 import {Recording} from "@/lib/types.ts";
-import {ExternalLinkIcon, Pencil2Icon, PlusCircledIcon} from "@radix-ui/react-icons";
+import {ExternalLinkIcon, Pencil2Icon, PlusCircledIcon, TrashIcon} from "@radix-ui/react-icons";
 import {useAuth} from "@/context/AuthProvider.tsx";
+import {RemoveRecordingDialog} from "@/components/RemoveRecordingDialog.tsx";
 
 export const App = () => {
 	const auth = useAuth()
@@ -22,7 +23,8 @@ export const App = () => {
 	const [isLoginDialogOpen, setIsLoginDialogOpen] = useState<boolean>(false)
 	const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false)
 	const [editRecording, setEditRecording] = useState<Recording | null>(null)
-
+	const [isRemoveDialogOpen, setRemoveDialogOpen] = useState<boolean>(false)
+	const [removeRecording, setRemoveRecording] = useState<Recording | null>(null)
 
 	useEffect(() => {
 		const loadData = async () => {
@@ -43,6 +45,11 @@ export const App = () => {
 	const handleEditRecord = (item: Recording) => {
 		setEditRecording(item)
 		setIsEditDialogOpen(!isEditDialogOpen)
+	}
+
+	const handleRemoveRecord = async (item: Recording) => {
+		setRemoveRecording(item)
+		setRemoveDialogOpen(!isRemoveDialogOpen)
 	}
 
 	return (
@@ -81,6 +88,9 @@ export const App = () => {
 								<CardFooter className='flex justify-end gap-4'>
 									{user && (
 										<>
+											<Button variant='destructive' size='icon'
+													onClick={() => handleRemoveRecord(item)}
+											><TrashIcon /></Button>
 											<Button size='icon' variant='secondary'
 													onClick={() => handleEditRecord(item)}><Pencil2Icon/></Button>
 											{item.url
@@ -106,6 +116,8 @@ export const App = () => {
 			{isEditDialogOpen && editRecording &&
                 <EditRecordingDialog recording={editRecording} isOpen={isEditDialogOpen}
                                      onOpenChange={() => setIsEditDialogOpen(!isEditDialogOpen)}/>}
+			{isRemoveDialogOpen && removeRecording &&
+				<RemoveRecordingDialog recording={removeRecording} isOpen={isRemoveDialogOpen} onOpenChange={() => setRemoveDialogOpen(!isRemoveDialogOpen)} />}
 		</>
 	)
 }
