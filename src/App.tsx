@@ -11,6 +11,10 @@ import {ExternalLinkIcon, Pencil2Icon, PlusCircledIcon} from "@radix-ui/react-ic
 import {useAuth} from "@/context/AuthProvider.tsx";
 
 export const App = () => {
+	const auth = useAuth()
+
+	const user = auth ? auth.user : null
+	const logout = auth ? auth.logout : null
 
 	const [recordings, setRecordings] = useState<Recording[]>([])
 	const [searching, setSearching] = useState<string>('')
@@ -19,7 +23,6 @@ export const App = () => {
 	const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false)
 	const [editRecording, setEditRecording] = useState<Recording | null>(null)
 
-	const {user, logout} = useAuth()
 
 	useEffect(() => {
 		const loadData = async () => {
@@ -52,11 +55,13 @@ export const App = () => {
 							   onChange={(e) => setSearching(e.target.value)}/>
 						{user
 							? (<>
-									<Button onClick={() => setIsAddDialogOpen(!isAddDialogOpen)}>
-										<PlusCircledIcon className='mr-2 h-4 w-4'/>Add new
-									</Button>
-									<Button onClick={() => logout()}>Logout</Button>
-								</>)
+								<Button onClick={() => setIsAddDialogOpen(!isAddDialogOpen)}>
+									<PlusCircledIcon className='mr-2 h-4 w-4'/>Add new
+								</Button>
+								{logout &&
+                                    <Button onClick={() => logout()}>Logout</Button>
+								}
+							</>)
 							: <Button onClick={() => setIsLoginDialogOpen(!isLoginDialogOpen)}>Login</Button>
 						}
 					</div>

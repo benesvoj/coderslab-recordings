@@ -20,7 +20,9 @@ import {
 import {useAuth} from "@/context/AuthProvider.tsx";
 
 export const LoginDialog = ({isOpen, onOpenChange}: { isOpen: boolean, onOpenChange: (isOpen: boolean) => void }) => {
-	const { login } = useAuth()
+	const auth = useAuth()
+
+	const login = auth ? auth.login : null
 
 	const form = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
@@ -31,22 +33,24 @@ export const LoginDialog = ({isOpen, onOpenChange}: { isOpen: boolean, onOpenCha
 	})
 
 	const onSubmit = async (values: z.infer<typeof schema>) => {
-		try {
-			const {
-				data: {user, session},
-				error
-			} = await login({email: values.email, password: values.password})
+		if (login) {
+			try {
+				const {
+					data: {user, session},
+					error
+				} = await login({email: values.email, password: values.password})
 
-			if(error) {
-				console.log(error)
-			}
+				if (error) {
+					console.log(error)
+				}
 
-			if(user && session) {
-				console.log('logged in')
-				onOpenChange(false)
+				if (user && session) {
+					console.log('logged in')
+					onOpenChange(false)
+				}
+			} catch (error) {
+				console.error(error)
 			}
-		} catch (error) {
-			console.error(error)
 		}
 	}
 
@@ -63,7 +67,7 @@ export const LoginDialog = ({isOpen, onOpenChange}: { isOpen: boolean, onOpenCha
 									   <FormItem>
 										   <FormLabel>Username</FormLabel>
 										   <FormControl>
-											   <Input placeholder="Enter email" {...field} type='email' />
+											   <Input placeholder="Enter email" {...field} type='email'/>
 										   </FormControl>
 										   <FormMessage/>
 									   </FormItem>
