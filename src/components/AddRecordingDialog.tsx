@@ -14,6 +14,7 @@ import {Form, FormControl, FormField, FormItem, FormLabel} from "@/components/ui
 import {z} from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
+import {useToast} from "@/components/ui/use-toast.ts";
 
 const recording = {
 	title: '',
@@ -26,6 +27,8 @@ export const AddRecordingDialog = ({isOpen, onOpenChange}: {
 	isOpen: boolean,
 	onOpenChange: (isOpen: boolean) => void
 }) => {
+
+	const {toast} = useToast()
 
 	const form = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
@@ -45,6 +48,7 @@ export const AddRecordingDialog = ({isOpen, onOpenChange}: {
 		onOpenChange(false)
 
 		if (error) throw error;
+		toast({description: 'Recording added'})
 	}
 
 	return (

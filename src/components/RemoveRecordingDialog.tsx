@@ -2,12 +2,15 @@ import {Dialog, DialogClose, DialogContent, DialogFooter, DialogTitle} from "@/c
 import {Button} from "@/components/ui/button.tsx";
 import {Recording} from "@/lib/types.ts";
 import {supabase} from "@/utils/supabase.ts";
+import {useToast} from "@/components/ui/use-toast.ts";
 
 export const RemoveRecordingDialog = ({recording, isOpen, onOpenChange}: {
 	recording: Recording,
 	isOpen: boolean,
 	onOpenChange: (isOpen: boolean) => void
 }) => {
+
+	const {toast} = useToast()
 
 	const handleRemoveRecoding = async () => {
 		const {error} = await supabase
@@ -20,12 +23,13 @@ export const RemoveRecordingDialog = ({recording, isOpen, onOpenChange}: {
 		}
 
 		onOpenChange(false)
+		toast({description: 'Recording removed'})
 	}
 
 	return (
 		<Dialog open={isOpen} onOpenChange={onOpenChange}>
-			<DialogTitle>Remove Recording</DialogTitle>
 			<DialogContent>
+				<DialogTitle>Remove Recording</DialogTitle>
 				<p>Are you sure you want to remove this recording?</p>
 				<DialogFooter>
 					<DialogClose asChild>
