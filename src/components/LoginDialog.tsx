@@ -17,19 +17,37 @@ import {
 	FormLabel,
 	FormMessage
 } from "@/components/ui/form.tsx";
+import {useAuth} from "@/context/AuthProvider.tsx";
 
-export const LoginDialog = ({isOpen, onOpenChange}: {isOpen: boolean, onOpenChange: (isOpen: boolean) => void}) => {
+export const LoginDialog = ({isOpen, onOpenChange}: { isOpen: boolean, onOpenChange: (isOpen: boolean) => void }) => {
+	const { login } = useAuth()
+
 	const form = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
 		defaultValues: {
-			username: "",
+			email: "",
 			password: "",
 		},
 	})
 
-	const onSubmit = (values: z.infer<typeof schema>) => {
-		console.log('submitted')
-		console.log(values)
+	const onSubmit = async (values: z.infer<typeof schema>) => {
+		try {
+			const {
+				data: {user, session},
+				error
+			} = await login({email: values.email, password: values.password})
+
+			if(error) {
+				console.log(error)
+			}
+
+			if(user && session) {
+				console.log('logged in')
+				onOpenChange(false)
+			}
+		} catch (error) {
+			console.error(error)
+		}
 	}
 
 	return (
@@ -40,12 +58,12 @@ export const LoginDialog = ({isOpen, onOpenChange}: {isOpen: boolean, onOpenChan
 				</DialogHeader>
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
-						<FormField name='username' control={form.control}
+						<FormField name='email' control={form.control}
 								   render={({field}) => (
 									   <FormItem>
 										   <FormLabel>Username</FormLabel>
 										   <FormControl>
-											   <Input placeholder="Enter username" {...field} />
+											   <Input placeholder="Enter email" {...field} type='email' />
 										   </FormControl>
 										   <FormMessage/>
 									   </FormItem>
@@ -74,8 +92,8 @@ export const LoginDialog = ({isOpen, onOpenChange}: {isOpen: boolean, onOpenChan
 
 
 const schema = z.object({
-	username: z.string()
-		.min(3, {message: "Username must be at least 3 characters."})
+	email: z.string()
+		.min(3, {message: "Email must be at least 3 characters."})
 		.max(25),
 	password: z.string()
 		.min(6, {message: "Username must be at least 3 characters."})

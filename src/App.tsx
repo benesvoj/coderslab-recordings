@@ -7,6 +7,8 @@ import {AddRecordingDialog} from "@/components/AddRecordingDialog.tsx";
 import {Input} from "@/components/ui/input.tsx";
 import {LoginDialog} from "@/components/LoginDialog.tsx";
 import {Recording} from "@/lib/types.ts";
+import {ExternalLinkIcon, Pencil2Icon, PlusCircledIcon} from "@radix-ui/react-icons";
+import {useAuth} from "@/context/AuthProvider.tsx";
 
 export const App = () => {
 
@@ -17,12 +19,14 @@ export const App = () => {
 	const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false)
 	const [editRecording, setEditRecording] = useState<Recording | null>(null)
 
+	const {user, logout} = useAuth()
+
 	useEffect(() => {
 		const loadData = async () => {
 			const {data} = await supabase
 				.from('recordings')
 				.select()
-				.order('date')
+				.order('date', {ascending: false})
 
 			setRecordings(data || [])
 		}
@@ -46,8 +50,15 @@ export const App = () => {
 					<div className='flex gap-4 items-center'>
 						<Input type='search' placeholder='Searching ...' value={searching}
 							   onChange={(e) => setSearching(e.target.value)}/>
-						<Button onClick={() => setIsAddDialogOpen(!isAddDialogOpen)}>Add new</Button>
-						<Button onClick={() => setIsLoginDialogOpen(!isLoginDialogOpen)}>Login</Button>
+						{user
+							? (<>
+									<Button onClick={() => setIsAddDialogOpen(!isAddDialogOpen)}>
+										<PlusCircledIcon className='mr-2 h-4 w-4'/>Add new
+									</Button>
+									<Button onClick={() => logout()}>Logout</Button>
+								</>)
+							: <Button onClick={() => setIsLoginDialogOpen(!isLoginDialogOpen)}>Login</Button>
+						}
 					</div>
 				</div>
 				<div className='w-full grid grid-cols-2'>
@@ -63,12 +74,18 @@ export const App = () => {
 									</CardDescription>
 								</CardHeader>
 								<CardFooter className='flex justify-end gap-4'>
-									<Button variant='secondary' onClick={() => handleEditRecord(item)}>Edit</Button>
-									{item.url
-										? (<a className={buttonVariants({variant: "default"})} href={item.url}
-											  target='_blank'>Show me</a>)
-										: null
-									}
+									{user && (
+										<>
+											<Button size='icon' variant='secondary'
+													onClick={() => handleEditRecord(item)}><Pencil2Icon/></Button>
+											{item.url
+												? (<a className={buttonVariants({variant: "default"})} href={item.url}
+													  target='_blank'>Show me<ExternalLinkIcon
+													className='ml-2 h-4 w-4'/></a>)
+												: null
+											}
+										</>
+									)}
 								</CardFooter>
 							</Card>
 						)
@@ -81,8 +98,9 @@ export const App = () => {
 			{isAddDialogOpen &&
                 <AddRecordingDialog isOpen={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}/>
 			}
-			{isEditDialogOpen && editRecording && <EditRecordingDialog recording={editRecording} isOpen={isEditDialogOpen}
-                                                      onOpenChange={() => setIsEditDialogOpen(!isEditDialogOpen)}/>}
+			{isEditDialogOpen && editRecording &&
+                <EditRecordingDialog recording={editRecording} isOpen={isEditDialogOpen}
+                                     onOpenChange={() => setIsEditDialogOpen(!isEditDialogOpen)}/>}
 		</>
 	)
 }
