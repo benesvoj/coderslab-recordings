@@ -1,5 +1,5 @@
 import {Card, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card.tsx";
-import {buttonVariants} from "@/components/ui/button"
+import {Button, buttonVariants} from "@/components/ui/button"
 import {useEffect, useState} from "react";
 import {supabase} from "@/utils/supabase.ts";
 import {EditRecordingDialog} from "@/components/EditRecordingDialog.tsx";
@@ -19,6 +19,9 @@ export const App = () => {
 
 	const [recordings, setRecordings] = useState<Recording[]>([])
 	const [searching, setSearching] = useState<string>('')
+	const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false)
+	const [isLoginDialogOpen, setIsLoginDialogOpen] = useState<boolean>(false)
+	const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false)
 
 	useEffect(() => {
 		const loadData = async () => {
@@ -37,37 +40,60 @@ export const App = () => {
 		return item.title.toLowerCase().includes(searching.toLowerCase())
 	})
 
+	const handleEditDialog = () => {
+		console.log('clicked edit')
+		setIsEditDialogOpen(!isEditDialogOpen)
+	}
+	const onOpenChange = () => {
+		setIsEditDialogOpen(!isEditDialogOpen)
+	}
+
+	const handleLoginDialog = () => {
+		setIsLoginDialogOpen(!isLoginDialogOpen)
+	}
+
+	const handleAddDialog = () => {
+		setIsAddDialogOpen(!isAddDialogOpen)
+	}
+
+
 	return (
-		<div className='p-24'>
-			<div className='w-full flex justify-between p-2'>
-				<h1 className='text-2xl font-semibold my-4'>CodersLab recordings</h1>
-				<div className='flex gap-4 items-center'>
-					<Input type='search' value={searching} onChange={(e) => setSearching(e.target.value)} />
-					<AddRecordingDialog/>
-					<LoginDialog />
+		<>
+			<div className='p-24'>
+				<div className='w-full flex justify-between p-2'>
+					<h1 className='text-2xl font-semibold my-4'>CodersLab recordings</h1>
+					<div className='flex gap-4 items-center'>
+						<Input type='search' value={searching} onChange={(e) => setSearching(e.target.value)}/>
+						<Button onClick={handleAddDialog}>Add new</Button>
+						<Button onClick={handleLoginDialog}>Login</Button>
+					</div>
+				</div>
+				<div className='w-full grid grid-cols-2'>
+					{filteredRecordings.map((item) => (
+							<Card key={item.id} className='m-2'>
+								<CardHeader>
+									<CardTitle className='flex justify-between'>
+										<div>{item.title}</div>
+										<div className='text-sm text-gray-400'>{item.date}</div>
+									</CardTitle>
+									<CardDescription>
+										{item.description}
+									</CardDescription>
+								</CardHeader>
+								<CardFooter className='flex justify-end gap-4'>
+									<Button variant='secondary' onClick={handleEditDialog}>Edit</Button>
+									<a
+										className={buttonVariants({variant: "default"})}
+										href={item.url} target='_blank'>Show me</a>
+								</CardFooter>
+								<EditRecordingDialog recording={item} isOpen={isEditDialogOpen}
+													 onOpenChange={onOpenChange}/>
+							</Card>
+					))}
 				</div>
 			</div>
-			<div className='w-full grid grid-cols-2'>
-				{filteredRecordings.map((item) => (
-					<Card key={item.id} className='m-2'>
-						<CardHeader>
-							<CardTitle className='flex justify-between'>
-								<div>{item.title}</div>
-								<div className='text-sm text-gray-400'>{item.date}</div>
-							</CardTitle>
-							<CardDescription>
-								{item.description}
-							</CardDescription>
-						</CardHeader>
-						<CardFooter className='flex justify-end gap-4'>
-							<EditRecordingDialog recording={item}/>
-							<a
-								className={buttonVariants({variant: "default"})}
-								href={item.url} target='_blank'>Show me</a>
-						</CardFooter>
-					</Card>
-				))}
-			</div>
-		</div>
+			<LoginDialog isOpen={isLoginDialogOpen} onOpenChange={setIsLoginDialogOpen} />
+			<AddRecordingDialog isOpen={isAddDialogOpen} onOpenChange={setIsAddDialogOpen} />
+		</>
 	)
 }

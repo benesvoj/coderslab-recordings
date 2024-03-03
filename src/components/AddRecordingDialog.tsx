@@ -5,7 +5,6 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-	DialogTrigger
 } from "@/components/ui/dialog.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {Label} from "@/components/ui/label.tsx";
@@ -21,7 +20,7 @@ const recording = {
 	date: ''
 }
 
-export const AddRecordingDialog = () => {
+export const AddRecordingDialog = ({isOpen, onOpenChange}: {isOpen: boolean, onOpenChange: (isOpen: boolean) => void}) => {
 
 	const [value, setValue] = useState(recording)
 
@@ -43,10 +42,7 @@ export const AddRecordingDialog = () => {
 	}
 
 	return (
-		<Dialog>
-			<DialogTrigger>
-				<Button variant='default'>Add new</Button>
-			</DialogTrigger>
+		<Dialog open={isOpen} onOpenChange={onOpenChange}>
 			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>Add new recording</DialogTitle>

@@ -1,11 +1,8 @@
 import {
 	Dialog,
-	DialogClose,
 	DialogContent,
-	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-	DialogTrigger
 } from "@/components/ui/dialog.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {Input} from "@/components/ui/input.tsx";
@@ -21,8 +18,7 @@ import {
 	FormMessage
 } from "@/components/ui/form.tsx";
 
-export const LoginDialog = () => {
-
+export const LoginDialog = ({isOpen, onOpenChange}: {isOpen: boolean, onOpenChange: (isOpen: boolean) => void}) => {
 	const form = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
 		defaultValues: {
@@ -37,10 +33,7 @@ export const LoginDialog = () => {
 	}
 
 	return (
-		<Dialog>
-			<DialogTrigger>
-				<Button variant='default'>Login</Button>
-			</DialogTrigger>
+		<Dialog open={isOpen} onOpenChange={onOpenChange}>
 			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>Login</DialogTitle>
@@ -69,13 +62,10 @@ export const LoginDialog = () => {
 									   </FormItem>
 								   )}
 						/>
+						<div className='flex justify-end'>
+							<Button type='submit' variant='default'>Login</Button>
+						</div>
 					</form>
-					<DialogFooter>
-						<DialogClose asChild>
-							<Button variant='secondary'>Return</Button>
-						</DialogClose>
-						<Button variant='default' type='submit'>Login</Button>
-					</DialogFooter>
 				</Form>
 			</DialogContent>
 		</Dialog>
