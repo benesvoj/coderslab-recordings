@@ -12,7 +12,8 @@ export const RemoveRecordingDialog = ({recording, isOpen, onOpenChange}: {
 
 	const {toast} = useToast()
 
-	const handleRemoveRecoding = async () => {
+	const HandleRemoveRecoding = async() => {
+
 		const {error} = await supabase
 			.from('recordings')
 			.delete()
@@ -21,7 +22,6 @@ export const RemoveRecordingDialog = ({recording, isOpen, onOpenChange}: {
 		if (error) {
 			console.error('Error removing recording:', error)
 		}
-
 		onOpenChange(false)
 		toast({description: 'Recording removed'})
 	}
@@ -35,7 +35,7 @@ export const RemoveRecordingDialog = ({recording, isOpen, onOpenChange}: {
 					<DialogClose asChild>
 						<Button variant='secondary'>Cancel</Button>
 					</DialogClose>
-					<Button variant='destructive' onClick={handleRemoveRecoding}>Remove</Button>
+					<Button variant='destructive' onClick={HandleRemoveRecoding}>Remove</Button>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>
