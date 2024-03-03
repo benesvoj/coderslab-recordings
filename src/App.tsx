@@ -5,6 +5,7 @@ import {supabase} from "@/utils/supabase.ts";
 import {EditRecordingDialog} from "@/components/EditRecordingDialog.tsx";
 import {AddRecordingDialog} from "@/components/AddRecordingDialog.tsx";
 import {Input} from "@/components/ui/input.tsx";
+import {LoginDialog} from "@/components/LoginDialog.tsx";
 
 export interface Recording {
 	id: string
@@ -38,11 +39,12 @@ export const App = () => {
 
 	return (
 		<div className='p-24'>
-			<div className='w-full flex justify-between'>
+			<div className='w-full flex justify-between p-2'>
 				<h1 className='text-2xl font-semibold my-4'>CodersLab recordings</h1>
 				<div className='flex gap-4 items-center'>
 					<Input type='search' value={searching} onChange={(e) => setSearching(e.target.value)} />
 					<AddRecordingDialog/>
+					<LoginDialog />
 				</div>
 			</div>
 			<div className='w-full grid grid-cols-2'>

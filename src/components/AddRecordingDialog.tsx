@@ -35,11 +35,11 @@ export const AddRecordingDialog = () => {
 
 	const handleSubmit = async () => {
 		console.log(value)
-		const {data} = await supabase
+		const {error} = await supabase
 			.from('recordings')
 			.insert({title: value.title, description: value.description, url: value.url, date: value.date})
 
-		console.log(data)
+		if (error) throw error;
 	}
 
 	return (
