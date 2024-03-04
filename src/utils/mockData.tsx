@@ -97,18 +97,4 @@ export const mockData = [
 		description: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Fusce wisi. Duis pulvinar. Donec ipsum massa, ullamcorper in, auctor et, scelerisque sed, est. Maecenas libero. Mauris elementum mauris vitae tortor. Praesent in mauris eu tortor porttitor accumsan. In dapibus augue non sapien.',
 		date: '2024-01-21'
 	},
-	{
-		id: 15,
-		title: 'JavaScript sobota',
-		url: 'https://drive.google.com/file/d/1Uycu_Aph6j4XojXukeepm1Emj8DNhewE/view',
-		description: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Fusce wisi. Duis pulvinar. Donec ipsum massa, ullamcorper in, auctor et, scelerisque sed, est. Maecenas libero. Mauris elementum mauris vitae tortor. Praesent in mauris eu tortor porttitor accumsan. In dapibus augue non sapien.',
-		date: '2024-01-13'
-	},
-	{
-		id: 16,
-		title: 'JavaScript nedele',
-		url: 'https://drive.google.com/file/d/1JncBMYPu17bXFTWz-t7zXoq8Vifq-7bK/view',
-		description: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Fusce wisi. Duis pulvinar. Donec ipsum massa, ullamcorper in, auctor et, scelerisque sed, est. Maecenas libero. Mauris elementum mauris vitae tortor. Praesent in mauris eu tortor porttitor accumsan. In dapibus augue non sapien.',
-		date: '2024-01-14'
-	},
 ]

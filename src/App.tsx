@@ -1,4 +1,4 @@
-import {Card, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card.tsx";
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card.tsx";
 import {Button, buttonVariants} from "@/components/ui/button"
 import {useEffect, useState} from "react";
 import {supabase} from "@/utils/supabase.ts";
@@ -36,7 +36,7 @@ export const App = () => {
 			setRecordings(data || [])
 		}
 		loadData()
-	}, [])
+	}, [recordings])
 
 	const filteredRecordings = recordings.filter((item) => {
 		return item.title.toLowerCase().includes(searching.toLowerCase())
@@ -56,7 +56,11 @@ export const App = () => {
 		<>
 			<div className='p-24'>
 				<div className='w-full flex justify-between p-2'>
+					<div className='flex flex-col'>
 					<h1 className='text-2xl font-semibold my-4'>CodersLab recordings</h1>
+					<p className='text-sm text-gray-300'>Logged as: {user ? user.email : 'Guest'}</p>
+					<p className='text-sm text-gray-300'>Recordings count: {filteredRecordings.length} from {recordings.length}</p>
+					</div>
 					<div className='flex gap-4 items-center'>
 						<Input type='search' placeholder='Searching ...' value={searching}
 							   onChange={(e) => setSearching(e.target.value)}/>
@@ -81,11 +85,16 @@ export const App = () => {
 										<div>{item.title}</div>
 										<div className='text-sm text-gray-400'>{item.date}</div>
 									</CardTitle>
-									<CardDescription>
-										{item.description}
-									</CardDescription>
+									{item.lector &&
+                                        <CardDescription>
+                                            Lector: {item.lector}
+                                        </CardDescription>
+									}
 								</CardHeader>
-								<CardFooter className='flex justify-end gap-4'>
+								<CardContent>
+										{item.description}
+								</CardContent>
+								<CardFooter className='justify-end items-center gap-4'>
 									{user && (
 										<>
 											<Button variant='destructive' size='icon'

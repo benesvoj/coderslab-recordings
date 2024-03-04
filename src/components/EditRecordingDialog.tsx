@@ -27,7 +27,8 @@ export const EditRecordingDialog = ({recording, isOpen, onOpenChange}: {
 			title: recording.title,
 			description: recording.description,
 			url: recording.url,
-			date: recording.date
+			date: recording.date,
+			lector: recording.lector
 		}
 	})
 
@@ -89,6 +90,18 @@ export const EditRecordingDialog = ({recording, isOpen, onOpenChange}: {
 							)}
 						/>
 						<FormField
+							name='lector'
+							control={form.control}
+							render={({field}) => (
+								<FormItem>
+									<FormLabel>Lector</FormLabel>
+									<FormControl>
+										<Input {...field} />
+									</FormControl>
+								</FormItem>
+							)}
+						/>
+						<FormField
 							name='date'
 							control={form.control}
 							render={({field}) => (
@@ -117,5 +130,6 @@ const schema = z.object({
 	title: z.string(),
 	description: z.string(),
 	url: z.string(),
-	date: z.string()
+	date: z.string(),
+	lector: z.string()
 })

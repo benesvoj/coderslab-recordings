@@ -20,7 +20,8 @@ const recording = {
 	title: '',
 	description: '',
 	url: '',
-	date: ''
+	date: '',
+	lector: ''
 }
 
 export const AddRecordingDialog = ({isOpen, onOpenChange}: {
@@ -43,7 +44,8 @@ export const AddRecordingDialog = ({isOpen, onOpenChange}: {
 				title: values.title,
 				description: values.description,
 				url: values.url,
-				date: values.date
+				date: values.date,
+				lector: values.lector
 			})
 		onOpenChange(false)
 
@@ -70,7 +72,7 @@ export const AddRecordingDialog = ({isOpen, onOpenChange}: {
 									</FormControl>
 								</FormItem>
 							)}
-							/>
+						/>
 						<FormField
 							name='url'
 							control={form.control}
@@ -82,7 +84,7 @@ export const AddRecordingDialog = ({isOpen, onOpenChange}: {
 									</FormControl>
 								</FormItem>
 							)}
-							/>
+						/>
 						<FormField
 							name='description'
 							control={form.control}
@@ -90,11 +92,23 @@ export const AddRecordingDialog = ({isOpen, onOpenChange}: {
 								<FormItem>
 									<FormLabel>Description</FormLabel>
 									<FormControl>
-										<Textarea {...field} rows={6} />
+										<Textarea {...field} rows={6}/>
 									</FormControl>
 								</FormItem>
 							)}
-							/>
+						/>
+						<FormField
+							name='lector'
+							control={form.control}
+							render={({field}) => (
+								<FormItem>
+									<FormLabel>Lector</FormLabel>
+									<FormControl>
+										<Input {...field} />
+									</FormControl>
+								</FormItem>
+							)}
+						/>
 						<FormField
 							name='date'
 							control={form.control}
@@ -102,11 +116,11 @@ export const AddRecordingDialog = ({isOpen, onOpenChange}: {
 								<FormItem>
 									<FormLabel>Recording Date</FormLabel>
 									<FormControl>
-										<Input {...field} type='date' />
+										<Input {...field} type='date'/>
 									</FormControl>
 								</FormItem>
 							)}
-							/>
+						/>
 						<DialogFooter>
 							<DialogClose asChild>
 								<Button variant='secondary'>Close</Button>
@@ -124,5 +138,6 @@ const schema = z.object({
 	title: z.string(),
 	description: z.string(),
 	url: z.string(),
-	date: z.string()
+	date: z.string(),
+	lector: z.string()
 })

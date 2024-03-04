@@ -4,4 +4,5 @@ export interface Recording {
 	description: string
 	url: string
 	date: string
+	lector: string
 }
