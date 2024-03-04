@@ -7,11 +7,19 @@ import {AddRecordingDialog} from "@/components/AddRecordingDialog.tsx";
 import {Input} from "@/components/ui/input.tsx";
 import {LoginDialog} from "@/components/LoginDialog.tsx";
 import {Recording, tagTypes} from "@/lib/types.ts";
-import {ExternalLinkIcon, Pencil2Icon, PlusCircledIcon, TrashIcon} from "@radix-ui/react-icons";
+import {
+	ExitIcon,
+	ExternalLinkIcon,
+	HamburgerMenuIcon,
+	Pencil2Icon,
+	PlusCircledIcon,
+	TrashIcon
+} from "@radix-ui/react-icons";
 import {useAuth} from "@/context/AuthProvider.tsx";
 import {RemoveRecordingDialog} from "@/components/RemoveRecordingDialog.tsx";
 import {LoadDataContext} from "@/context/LoadDataContext.ts";
 import {Tabs, TabsList, TabsTrigger} from "@/components/ui/tabs.tsx";
+import {Sheet, SheetContent, SheetHeader, SheetTrigger} from "@/components/ui/sheet.tsx";
 
 export const App = () => {
 	const auth = useAuth()
@@ -58,7 +66,7 @@ export const App = () => {
 
 	return (
 		<LoadDataContext.Provider value={loadData}>
-			<div className='p-24'>
+			<div className='lg:p-24 p-8'>
 				<div className='w-full flex justify-between p-2'>
 					<div className='flex flex-col'>
 						<h1 className='text-2xl font-semibold my-4'>CodersLab recordings</h1>
@@ -66,7 +74,7 @@ export const App = () => {
 						<p className='text-sm text-gray-300'>Recordings
 							count: {filteredRecordings.length} from {recordings.length}</p>
 					</div>
-					<Tabs defaultValue='All' className='w-[400px] flex justify-center items-end'>
+					<Tabs defaultValue='All' className='md:w-[400px] md:flex justify-center items-end hidden '>
 						<TabsList>
 							<TabsTrigger value='All' onClick={() => setTagFilter('All')}>All</TabsTrigger>
 							{tagTypes.map((tag, index) => (
@@ -74,9 +82,10 @@ export const App = () => {
 							))}
 						</TabsList>
 					</Tabs>
-					<div className='flex gap-2 items-end'>
+					<div className='flex flex-col-reverse justify-between lg:flex-row gap-2 items-end'>
 						<Input type='search' placeholder='Searching ...' value={searching}
 							   onChange={(e) => setSearching(e.target.value)}/>
+						<div className='hidden lg:flex'>
 						{user
 							? (<>
 								{logout &&
@@ -88,9 +97,32 @@ export const App = () => {
 							</>)
 							: <Button onClick={() => setIsLoginDialogOpen(!isLoginDialogOpen)}>Login</Button>
 						}
+						</div>
+						<Sheet>
+							<SheetTrigger className='lg:hidden'>
+								<HamburgerMenuIcon className='h-6 w-6'/>
+							</SheetTrigger>
+							<SheetContent>
+								<SheetHeader>Menu</SheetHeader>
+								<div className='flex flex-col items-start pt-24'>
+								{user
+									? (<>
+										<Button onClick={() => setIsAddDialogOpen(!isAddDialogOpen)} variant='link'>
+											<PlusCircledIcon className='mr-2 h-4 w-4'/>Add new
+										</Button>
+										{logout &&
+                                            <Button onClick={() => logout()} variant='link'>
+												<ExitIcon className='mr-2 h-4 w-4' />Logout</Button>
+										}
+									</>)
+									: <Button onClick={() => setIsLoginDialogOpen(!isLoginDialogOpen)} variant='link'>Login</Button>
+								}
+								</div>
+							</SheetContent>
+						</Sheet>
 					</div>
 				</div>
-				<div className='w-full grid grid-cols-2'>
+				<div className='w-full grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3'>
 					{filteredRecordings.map((item) => (
 							<Card key={item.id} className='m-2 flex flex-col justify-between'>
 								<CardHeader>
