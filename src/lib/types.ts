@@ -8,4 +8,4 @@ export interface Recording {
 	tags?: string[] | null
 }
 
-export const tagTypes = ['React', 'Vanila JS', 'HTML/CSS']
+export const tagTypes = ['React', 'Vanilla JS', 'HTML/CSS']
