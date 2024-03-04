@@ -38,7 +38,6 @@ export const AddRecordingDialog = ({isOpen, onOpenChange}: {
 	})
 
 	const onSubmit = async (values: z.infer<typeof schema>) => {
-		console.log(values)
 		const {error} = await supabase
 			.from('recordings')
 			.insert({
