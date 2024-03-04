@@ -26,7 +26,7 @@ export const EditRecordingDialog = ({recording, isOpen, onOpenChange}: {
 }) => {
 
 	const loadData = useContext(LoadDataContext)
-	const { toast } = useToast()
+	const {toast} = useToast()
 
 	const form = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
@@ -48,7 +48,7 @@ export const EditRecordingDialog = ({recording, isOpen, onOpenChange}: {
 		if (error) throw error;
 
 		onOpenChange(false)
-		if(loadData) {
+		if (loadData) {
 			loadData()
 		}
 		toast({description: `Recording ${values.title} updated`})
@@ -119,6 +119,29 @@ export const EditRecordingDialog = ({recording, isOpen, onOpenChange}: {
 								</FormItem>
 							)}
 						/>
+						{/*{tagTypes.map((tag) => (*/}
+						{/*	<FormField*/}
+						{/*		key={tag}*/}
+						{/*		name='tags'*/}
+						{/*		control={form.control}*/}
+						{/*		render={({field}) => {*/}
+						{/*			return (*/}
+						{/*				<FormItem key={tag}>*/}
+						{/*					<FormControl>*/}
+						{/*						<Checkbox*/}
+						{/*							checked={field.value?.includes(tag)}*/}
+						{/*							onCheckedChange={(checked) => {*/}
+						{/*								return checked*/}
+						{/*									? field.onChange([...field.value, tag])*/}
+						{/*									: field.onChange(field.value?.filter((item) => item !== tag))*/}
+						{/*							}}*/}
+						{/*						/>*/}
+						{/*					</FormControl>*/}
+						{/*					<FormLabel>{tag}</FormLabel>*/}
+						{/*				</FormItem>)*/}
+						{/*		}}*/}
+						{/*	/>*/}
+						{/*))}*/}
 						<FormField
 							name='date'
 							control={form.control}
@@ -150,4 +173,5 @@ const schema = z.object({
 	url: z.string(),
 	date: z.string(),
 	lector: z.string().optional(),
+	tags: z.array(z.string()).optional()
 })
