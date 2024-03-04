@@ -15,6 +15,7 @@ import {z} from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useToast} from "@/components/ui/use-toast.ts";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select.tsx";
 
 const recording = {
 	title: '',
@@ -103,9 +104,18 @@ export const AddRecordingDialog = ({isOpen, onOpenChange}: {
 							render={({field}) => (
 								<FormItem>
 									<FormLabel>Lector</FormLabel>
-									<FormControl>
-										<Input {...field} />
-									</FormControl>
+									<Select onValueChange={field.onChange} value={field.value}>
+										<FormControl>
+											<SelectTrigger>
+												<SelectValue placeholder='Select lector'/>
+											</SelectTrigger>
+										</FormControl>
+										<SelectContent>
+											<SelectItem value="Luděk Roleček">Luděk Roleček</SelectItem>
+											<SelectItem value="Michal Kučera">Michal Kučera</SelectItem>
+											<SelectItem value="Pavel Petržela">Pavel Petržela</SelectItem>
+										</SelectContent>
+									</Select>
 								</FormItem>
 							)}
 						/>

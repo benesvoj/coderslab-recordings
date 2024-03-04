@@ -14,6 +14,7 @@ import {z} from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {Recording} from "@/lib/types.ts";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select.tsx";
 
 export const EditRecordingDialog = ({recording, isOpen, onOpenChange}: {
 	recording: Recording,
@@ -95,9 +96,18 @@ export const EditRecordingDialog = ({recording, isOpen, onOpenChange}: {
 							render={({field}) => (
 								<FormItem>
 									<FormLabel>Lector</FormLabel>
-									<FormControl>
-										<Input {...field} />
-									</FormControl>
+									<Select onValueChange={field.onChange} value={field.value}>
+										<FormControl>
+											<SelectTrigger>
+												<SelectValue placeholder='Select lector'/>
+											</SelectTrigger>
+										</FormControl>
+										<SelectContent>
+											<SelectItem value="Luděk Roleček">Luděk Roleček</SelectItem>
+											<SelectItem value="Michal Kučera">Michal Kučera</SelectItem>
+											<SelectItem value="Pavel Petržela">Pavel Petržela</SelectItem>
+										</SelectContent>
+									</Select>
 								</FormItem>
 							)}
 						/>
@@ -131,5 +141,5 @@ const schema = z.object({
 	description: z.string(),
 	url: z.string(),
 	date: z.string(),
-	lector: z.string()
+	lector: z.string().optional()
 })
