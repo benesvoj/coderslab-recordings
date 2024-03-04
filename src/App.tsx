@@ -64,6 +64,27 @@ export const App = () => {
 		setRemoveDialogOpen(!isRemoveDialogOpen)
 	}
 
+	const ActionMenu = ({isHidden = false}: { isHidden?: boolean }) => (
+			<>
+				{user
+					? (<>
+						<Button onClick={() => setIsAddDialogOpen(!isAddDialogOpen)}
+								variant={isHidden ? 'link' : 'default'}>
+							<PlusCircledIcon className='mr-2 h-4 w-4'/>Add new
+						</Button>
+						{logout &&
+                            <Button onClick={() => logout()} variant={isHidden ? 'link' : 'outline'}>
+								{isHidden ? < ExitIcon className='mr-2 h-4 w-4'/> : null}
+								Logout</Button>
+						}
+					</>)
+					: <Button onClick={() => setIsLoginDialogOpen(!isLoginDialogOpen)}
+							  variant={isHidden ? 'link' : 'default'}>Login</Button>
+				}
+			</>
+		)
+
+
 	return (
 		<LoadDataContext.Provider value={loadData}>
 			<div className='lg:p-24 p-8'>
@@ -78,25 +99,16 @@ export const App = () => {
 						<TabsList>
 							<TabsTrigger value='All' onClick={() => setTagFilter('All')}>All</TabsTrigger>
 							{tagTypes.map((tag, index) => (
-								<TabsTrigger key={index} value={tag} onClick={() => setTagFilter(tag)}>{tag}</TabsTrigger>
+								<TabsTrigger key={index} value={tag}
+											 onClick={() => setTagFilter(tag)}>{tag}</TabsTrigger>
 							))}
 						</TabsList>
 					</Tabs>
 					<div className='flex flex-col-reverse justify-between lg:flex-row gap-2 items-end'>
 						<Input type='search' placeholder='Searching ...' value={searching}
 							   onChange={(e) => setSearching(e.target.value)}/>
-						<div className='hidden lg:flex'>
-						{user
-							? (<>
-								{logout &&
-                                    <Button onClick={() => logout()} variant='outline'>Logout</Button>
-								}
-								<Button onClick={() => setIsAddDialogOpen(!isAddDialogOpen)}>
-									<PlusCircledIcon className='mr-2 h-4 w-4'/>Add new
-								</Button>
-							</>)
-							: <Button onClick={() => setIsLoginDialogOpen(!isLoginDialogOpen)}>Login</Button>
-						}
+						<div className='hidden lg:flex lg:gap-2'>
+							<ActionMenu />
 						</div>
 						<Sheet>
 							<SheetTrigger className='lg:hidden'>
@@ -105,18 +117,7 @@ export const App = () => {
 							<SheetContent>
 								<SheetHeader>Menu</SheetHeader>
 								<div className='flex flex-col items-start pt-24'>
-								{user
-									? (<>
-										<Button onClick={() => setIsAddDialogOpen(!isAddDialogOpen)} variant='link'>
-											<PlusCircledIcon className='mr-2 h-4 w-4'/>Add new
-										</Button>
-										{logout &&
-                                            <Button onClick={() => logout()} variant='link'>
-												<ExitIcon className='mr-2 h-4 w-4' />Logout</Button>
-										}
-									</>)
-									: <Button onClick={() => setIsLoginDialogOpen(!isLoginDialogOpen)} variant='link'>Login</Button>
-								}
+									<ActionMenu isHidden />
 								</div>
 							</SheetContent>
 						</Sheet>
