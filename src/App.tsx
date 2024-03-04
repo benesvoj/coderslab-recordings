@@ -6,11 +6,12 @@ import {EditRecordingDialog} from "@/components/EditRecordingDialog.tsx";
 import {AddRecordingDialog} from "@/components/AddRecordingDialog.tsx";
 import {Input} from "@/components/ui/input.tsx";
 import {LoginDialog} from "@/components/LoginDialog.tsx";
-import {Recording} from "@/lib/types.ts";
+import {Recording, tagTypes} from "@/lib/types.ts";
 import {ExternalLinkIcon, Pencil2Icon, PlusCircledIcon, TrashIcon} from "@radix-ui/react-icons";
 import {useAuth} from "@/context/AuthProvider.tsx";
 import {RemoveRecordingDialog} from "@/components/RemoveRecordingDialog.tsx";
 import {LoadDataContext} from "@/context/LoadDataContext.ts";
+import {Tabs, TabsList, TabsTrigger} from "@/components/ui/tabs.tsx";
 
 export const App = () => {
 	const auth = useAuth()
@@ -26,6 +27,7 @@ export const App = () => {
 	const [editRecording, setEditRecording] = useState<Recording | null>(null)
 	const [isRemoveDialogOpen, setRemoveDialogOpen] = useState<boolean>(false)
 	const [removeRecording, setRemoveRecording] = useState<Recording | null>(null)
+	const [tagFilter, setTagFilter] = useState<string>('All')
 
 	const loadData = async () => {
 		const {data} = await supabase
@@ -41,7 +43,7 @@ export const App = () => {
 	}, [])
 
 	const filteredRecordings = recordings.filter((item) => {
-		return item.title.toLowerCase().includes(searching.toLowerCase())
+		return (item.title.toLowerCase().includes(searching.toLowerCase()) || item.description.toLowerCase().includes(searching.toLowerCase())) && (tagFilter === 'All' || (item.tags && item.tags.includes(tagFilter)))
 	})
 
 	const handleEditRecord = (item: Recording) => {
@@ -64,7 +66,15 @@ export const App = () => {
 						<p className='text-sm text-gray-300'>Recordings
 							count: {filteredRecordings.length} from {recordings.length}</p>
 					</div>
-					<div className='flex gap-2 items-center'>
+					<Tabs defaultValue='All' className='w-[400px] flex justify-center items-end'>
+						<TabsList>
+							<TabsTrigger value='All' onClick={() => setTagFilter('All')}>All</TabsTrigger>
+							{tagTypes.map((tag, index) => (
+								<TabsTrigger key={index} value={tag} onClick={() => setTagFilter(tag)}>{tag}</TabsTrigger>
+							))}
+						</TabsList>
+					</Tabs>
+					<div className='flex gap-2 items-end'>
 						<Input type='search' placeholder='Searching ...' value={searching}
 							   onChange={(e) => setSearching(e.target.value)}/>
 						{user
@@ -97,9 +107,17 @@ export const App = () => {
 								<CardContent>
 									{item.description}
 								</CardContent>
-								<CardFooter className='justify-end gap-2 p-6'>
+								<CardFooter className={`${item.tags ? 'justify-between' : 'justify-end'} p-6`}>
+									{item.tags &&
+                                        <div>
+											{item.tags.map((tag) => (
+												<span key={tag}
+													  className='bg-gray-200 text-gray-600 text-xs px-2 py-1 rounded-full'>{tag}</span>
+											))}
+                                        </div>
+									}
 									{user && (
-										<>
+										<div className='flex gap-2'>
 											<Button variant='destructive' size='icon'
 													onClick={() => handleRemoveRecord(item)}
 											><TrashIcon/></Button>
@@ -111,7 +129,7 @@ export const App = () => {
 													className='ml-2 h-4 w-4'/></a>)
 												: null
 											}
-										</>
+										</div>
 									)}
 								</CardFooter>
 							</Card>

@@ -35,7 +35,7 @@ export const EditRecordingDialog = ({recording, isOpen, onOpenChange}: {
 			description: recording.description,
 			url: recording.url,
 			date: recording.date,
-			lector: recording.lector
+			lector: recording.lector,
 		}
 	})
 
@@ -149,5 +149,5 @@ const schema = z.object({
 	description: z.string(),
 	url: z.string(),
 	date: z.string(),
-	lector: z.string().optional()
+	lector: z.string().optional(),
 })
