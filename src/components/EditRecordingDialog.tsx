@@ -36,7 +36,7 @@ export const EditRecordingDialog = ({recording, isOpen, onOpenChange}: {
 	const onSubmit = async (values: z.infer<typeof schema>) => {
 		const {error} = await supabase
 			.from('recordings')
-			.update({title: values.title, url: values.url, description: values.description})
+			.update({title: values.title, url: values.url, description: values.description, lector: values.lector})
 			.eq('id', recording.id)
 
 		if (error) throw error;
