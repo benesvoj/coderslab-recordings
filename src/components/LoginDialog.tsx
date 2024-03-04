@@ -18,10 +18,11 @@ import {
 	FormMessage
 } from "@/components/ui/form.tsx";
 import {useAuth} from "@/context/AuthProvider.tsx";
+import {useToast} from "@/components/ui/use-toast.ts";
 
 export const LoginDialog = ({isOpen, onOpenChange}: { isOpen: boolean, onOpenChange: (isOpen: boolean) => void }) => {
 	const auth = useAuth()
-
+	const {toast}  = useToast()
 	const login = auth ? auth.login : null
 
 	const form = useForm<z.infer<typeof schema>>({
@@ -45,8 +46,8 @@ export const LoginDialog = ({isOpen, onOpenChange}: { isOpen: boolean, onOpenCha
 				}
 
 				if (user && session) {
-					console.log('logged in')
 					onOpenChange(false)
+					toast({description: `Welcome ${user.email}`})
 				}
 			} catch (error) {
 				console.error(error)

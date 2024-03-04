@@ -36,7 +36,7 @@ export const App = () => {
 			setRecordings(data || [])
 		}
 		loadData()
-	}, [recordings])
+	}, [])
 
 	const filteredRecordings = recordings.filter((item) => {
 		return item.title.toLowerCase().includes(searching.toLowerCase())
@@ -61,17 +61,17 @@ export const App = () => {
 					<p className='text-sm text-gray-300'>Logged as: {user ? user.email : 'Guest'}</p>
 					<p className='text-sm text-gray-300'>Recordings count: {filteredRecordings.length} from {recordings.length}</p>
 					</div>
-					<div className='flex gap-4 items-center'>
+					<div className='flex gap-2 items-center'>
 						<Input type='search' placeholder='Searching ...' value={searching}
 							   onChange={(e) => setSearching(e.target.value)}/>
 						{user
 							? (<>
+								{logout &&
+                                    <Button onClick={() => logout()} variant='outline'>Logout</Button>
+								}
 								<Button onClick={() => setIsAddDialogOpen(!isAddDialogOpen)}>
 									<PlusCircledIcon className='mr-2 h-4 w-4'/>Add new
 								</Button>
-								{logout &&
-                                    <Button onClick={() => logout()}>Logout</Button>
-								}
 							</>)
 							: <Button onClick={() => setIsLoginDialogOpen(!isLoginDialogOpen)}>Login</Button>
 						}
@@ -79,7 +79,7 @@ export const App = () => {
 				</div>
 				<div className='w-full grid grid-cols-2'>
 					{filteredRecordings.map((item) => (
-							<Card key={item.id} className='m-2'>
+							<Card key={item.id} className='m-2 flex flex-col justify-between'>
 								<CardHeader>
 									<CardTitle className='flex justify-between'>
 										<div>{item.title}</div>
@@ -94,7 +94,7 @@ export const App = () => {
 								<CardContent>
 										{item.description}
 								</CardContent>
-								<CardFooter className='justify-end items-center gap-4'>
+								<CardFooter className='justify-end gap-2 p-6'>
 									{user && (
 										<>
 											<Button variant='destructive' size='icon'
