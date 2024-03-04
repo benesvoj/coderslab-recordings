@@ -15,12 +15,15 @@ import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {Recording} from "@/lib/types.ts";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select.tsx";
+import {useToast} from "@/components/ui/use-toast.ts";
 
 export const EditRecordingDialog = ({recording, isOpen, onOpenChange}: {
 	recording: Recording,
 	isOpen: boolean,
 	onOpenChange: (isOpen: boolean) => void
 }) => {
+
+	const { toast } = useToast()
 
 	const form = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
@@ -41,6 +44,7 @@ export const EditRecordingDialog = ({recording, isOpen, onOpenChange}: {
 
 		if (error) throw error;
 		onOpenChange(false)
+		toast({description: `Recording ${values.title} updated`})
 	}
 
 	return (
