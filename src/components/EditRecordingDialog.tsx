@@ -1,7 +1,7 @@
 import {
 	Dialog, DialogClose,
 	DialogContent,
-	DialogDescription, DialogFooter,
+	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog.tsx";
@@ -52,12 +52,9 @@ export const EditRecordingDialog = ({recording, isOpen, onOpenChange}: {
 			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>Would you like to edit {recording.title} session?</DialogTitle>
-					<DialogDescription>
-						Following fields are editable.
-					</DialogDescription>
 				</DialogHeader>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)}>
+					<form className="grid gap-4 py-4" onSubmit={form.handleSubmit(onSubmit)}>
 						<FormField
 							name='title'
 							control={form.control}
