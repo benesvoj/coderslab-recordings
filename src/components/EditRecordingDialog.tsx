@@ -16,6 +16,8 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {Recording} from "@/lib/types.ts";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select.tsx";
 import {useToast} from "@/components/ui/use-toast.ts";
+import {LoadDataContext} from "@/context/LoadDataContext.ts";
+import {useContext} from "react";
 
 export const EditRecordingDialog = ({recording, isOpen, onOpenChange}: {
 	recording: Recording,
@@ -23,6 +25,7 @@ export const EditRecordingDialog = ({recording, isOpen, onOpenChange}: {
 	onOpenChange: (isOpen: boolean) => void
 }) => {
 
+	const loadData = useContext(LoadDataContext)
 	const { toast } = useToast()
 
 	const form = useForm<z.infer<typeof schema>>({
@@ -43,7 +46,11 @@ export const EditRecordingDialog = ({recording, isOpen, onOpenChange}: {
 			.eq('id', recording.id)
 
 		if (error) throw error;
+
 		onOpenChange(false)
+		if(loadData) {
+			loadData()
+		}
 		toast({description: `Recording ${values.title} updated`})
 	}
 

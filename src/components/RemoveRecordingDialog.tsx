@@ -3,6 +3,8 @@ import {Button} from "@/components/ui/button.tsx";
 import {Recording} from "@/lib/types.ts";
 import {supabase} from "@/utils/supabase.ts";
 import {useToast} from "@/components/ui/use-toast.ts";
+import {LoadDataContext} from "@/context/LoadDataContext.ts";
+import {useContext} from "react";
 
 export const RemoveRecordingDialog = ({recording, isOpen, onOpenChange}: {
 	recording: Recording,
@@ -10,6 +12,7 @@ export const RemoveRecordingDialog = ({recording, isOpen, onOpenChange}: {
 	onOpenChange: (isOpen: boolean) => void
 }) => {
 
+	const loadData = useContext(LoadDataContext)
 	const {toast} = useToast()
 
 	const HandleRemoveRecoding = async() => {
@@ -23,6 +26,9 @@ export const RemoveRecordingDialog = ({recording, isOpen, onOpenChange}: {
 			console.error('Error removing recording:', error)
 		}
 		onOpenChange(false)
+		if (loadData) {
+			loadData()
+		}
 		toast({description: 'Recording removed'})
 	}
 

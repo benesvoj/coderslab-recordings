@@ -10,6 +10,7 @@ import {Recording} from "@/lib/types.ts";
 import {ExternalLinkIcon, Pencil2Icon, PlusCircledIcon, TrashIcon} from "@radix-ui/react-icons";
 import {useAuth} from "@/context/AuthProvider.tsx";
 import {RemoveRecordingDialog} from "@/components/RemoveRecordingDialog.tsx";
+import {LoadDataContext} from "@/context/LoadDataContext.ts";
 
 export const App = () => {
 	const auth = useAuth()
@@ -26,15 +27,16 @@ export const App = () => {
 	const [isRemoveDialogOpen, setRemoveDialogOpen] = useState<boolean>(false)
 	const [removeRecording, setRemoveRecording] = useState<Recording | null>(null)
 
-	useEffect(() => {
-		const loadData = async () => {
-			const {data} = await supabase
-				.from('recordings')
-				.select()
-				.order('date', {ascending: false})
+	const loadData = async () => {
+		const {data} = await supabase
+			.from('recordings')
+			.select()
+			.order('date', {ascending: false})
 
-			setRecordings(data || [])
-		}
+		setRecordings(data || [])
+	}
+
+	useEffect(() => {
 		loadData()
 	}, [])
 
@@ -53,13 +55,14 @@ export const App = () => {
 	}
 
 	return (
-		<>
+		<LoadDataContext.Provider value={loadData}>
 			<div className='p-24'>
 				<div className='w-full flex justify-between p-2'>
 					<div className='flex flex-col'>
-					<h1 className='text-2xl font-semibold my-4'>CodersLab recordings</h1>
-					<p className='text-sm text-gray-300'>Logged as: {user ? user.email : 'Guest'}</p>
-					<p className='text-sm text-gray-300'>Recordings count: {filteredRecordings.length} from {recordings.length}</p>
+						<h1 className='text-2xl font-semibold my-4'>CodersLab recordings</h1>
+						<p className='text-sm text-gray-300'>Logged as: {user ? user.email : 'Guest'}</p>
+						<p className='text-sm text-gray-300'>Recordings
+							count: {filteredRecordings.length} from {recordings.length}</p>
 					</div>
 					<div className='flex gap-2 items-center'>
 						<Input type='search' placeholder='Searching ...' value={searching}
@@ -92,14 +95,14 @@ export const App = () => {
 									}
 								</CardHeader>
 								<CardContent>
-										{item.description}
+									{item.description}
 								</CardContent>
 								<CardFooter className='justify-end gap-2 p-6'>
 									{user && (
 										<>
 											<Button variant='destructive' size='icon'
 													onClick={() => handleRemoveRecord(item)}
-											><TrashIcon /></Button>
+											><TrashIcon/></Button>
 											<Button size='icon' variant='secondary'
 													onClick={() => handleEditRecord(item)}><Pencil2Icon/></Button>
 											{item.url
@@ -126,7 +129,8 @@ export const App = () => {
                 <EditRecordingDialog recording={editRecording} isOpen={isEditDialogOpen}
                                      onOpenChange={() => setIsEditDialogOpen(!isEditDialogOpen)}/>}
 			{isRemoveDialogOpen && removeRecording &&
-				<RemoveRecordingDialog recording={removeRecording} isOpen={isRemoveDialogOpen} onOpenChange={() => setRemoveDialogOpen(!isRemoveDialogOpen)} />}
-		</>
+                <RemoveRecordingDialog recording={removeRecording} isOpen={isRemoveDialogOpen}
+                                       onOpenChange={() => setRemoveDialogOpen(!isRemoveDialogOpen)}/>}
+		</LoadDataContext.Provider>
 	)
 }
